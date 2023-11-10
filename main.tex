@@ -1,0 +1,79 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{amsmath}
+\usepackage{amssymb}
+\newcommand{\norm}[1]{\left \lVert #1 \right \rVert}
+\title{Calam Saunders}
+\date{October 2023}
+
+\begin{document}
+
+\maketitle
+
+Part III: Gradient Descent
+$$
+g(\mathbf{y}) := \sum_{i=1}^{m}\sqrt{y_i^2+\eta^2}
+$$
+
+$$
+\nabla g(\mathbf{y}) = \bigg(\frac{y_1}{\sqrt{y_1^2+\eta^2}},  \dots , \frac{y_m}{\sqrt{y_m^2+\eta^2}} \bigg)
+$$
+
+\begin{equation}\begin{split}
+(\nabla^2g(\mathbf{y}))_{i,i} & = \frac{\partial}{\partial y_i}\bigg( \frac{y_i}{\sqrt{y_i^2+\eta^2}} \bigg) \\
+& = \frac{1}{\sqrt{y_i^2+\eta^2}} - \frac{y_i^2}{(y_i^2+\eta^2)^{\frac{3}{2}}} \\
+& = \frac{y_i^2 + \eta^2}{(y_i^2+\eta^2)^{\frac{3}{2}}} - \frac{y_i^2}{(y_i^2+\eta^2)^{\frac{3}{2}}} \\
+& = \frac{\eta^2}{(y_i^2+\eta^2)^{\frac{3}{2}}}
+\end{split}\end{equation}
+Note also that $(\nabla^2g(\mathbf{y}))_{i,j} = 0$ for $i \neq j$
+$$
+\implies \nabla^2g(\mathbf{y}) = 
+\begin{bmatrix}
+\frac{\eta^2}{(y_1^2+\eta^2)^{\frac{3}{2}}} &  &  \\
+ & \ddots & \\
+ & & \frac{\eta^2}{(y_m^2+\eta^2)^{\frac{3}{2}}}
+\end{bmatrix}
+$$
+
+Here, we can see the eigenvalues of this matrix are the diagonal elements i.e. $\frac{\eta^2}{(y_i^2+\eta^2)^{\frac{3}{2}}}$, which are all non-negative. From lecture notes, we can deduce that $\nabla^2g(\mathbf{y})$ is positive semi-definite or $\forall \mathbf{x} \in \mathbb{R}^n$:
+$$
+\mathbf{x}^\intercal \nabla^2g(\mathbf{y}) \mathbf{x} \geq 0
+$$
+Now consider:
+
+\begin{equation}\begin{split}
+\mathbf{x}^\intercal \nabla^2f(\mathbf{x}) \mathbf{x} & = \mathbf{x}^\intercal \mathbf{A}^\intercal \nabla^2g(\mathbf{Ax-b}) \mathbf{Ax} \\
+& = (\mathbf{Ax})^\intercal \nabla^2g(\mathbf{Ax-b}) \mathbf{Ax} \\
+\end{split}\end{equation}
+Relabelling $\mathbf{Ax} = \mathbf{w}$
+\begin{equation}\begin{split}
+(\mathbf{Ax})^\intercal \nabla^2g(\mathbf{Ax-b}) \mathbf{Ax} & = \mathbf{w}^\intercal \nabla^2g(\mathbf{Ax-b}) \mathbf{w} \geq 0 \\
+\end{split}\end{equation}
+Hence, $\nabla^2f(\mathbf{x}) \succcurlyeq 0$ as required.
+
+
+
+Part III iiB):
+
+Firstly, consider $\norm{\nabla^2g(\mathbf{Ax-b})}$:
+\begin{equation}\begin{split}
+\norm{\nabla^2g(\mathbf{Ax-b})} & = \biggl( \lambda_{\text{max}}\bigg[(\nabla^2g(\mathbf{Ax-b}))^\intercal \nabla^2g(\mathbf{Ax-b})\bigg] \biggl)^\frac{1}{2} \\
+& = \biggl( \max_{i}\bigg[ \frac{\eta^4}{(y_i^2+\eta^2)^3} \bigg] \biggl)^\frac{1}{2} \\
+& \leq \bigg( \frac{\eta^4}{(\eta^2)^3} \bigg)^\frac{1}{2} \\
+& = \frac{1}{\eta}
+\end{split}\end{equation}
+
+Now consider $\norm{\nabla^2f(\mathbf{x})}$:
+\begin{equation}\begin{split}
+\norm{\nabla^2f(\mathbf{x})} & = \norm{\mathbf{A}^\intercal \nabla^2g(\mathbf{Ax-b}) \mathbf{A}} \\
+& \leq \norm{\mathbf{A^\intercal}} \norm{\nabla^2g(\mathbf{Ax-b})} \norm{\mathbf{A}} \\
+& = \norm{\mathbf{A}}^2 \norm{\nabla^2g(\mathbf{Ax-b})} \\
+& \leq \frac{\norm{\mathbf{A}}^2}{\eta}
+\end{split}\end{equation}
+Finally, from lectures we know that: 
+$$
+\norm{\nabla^2f(\mathbf{x})} \leq L = \frac{\norm{\mathbf{A}}^2}{\eta} \iff f \in C_L^{1,1}
+$$
+
+
+\end{document}
